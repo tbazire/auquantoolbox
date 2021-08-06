@@ -12,7 +12,8 @@ from itertools import groupby
 def getCookieForYahoo(instrumentId):
     """Returns a tuple pair of cookie and crumb used in the request"""
     url = 'https://finance.yahoo.com/quote/%s/history' % (instrumentId)
-    req = requests.get(url)
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    req = requests.get(url, headers=headers)
     txt = req.content
     cookie = req.cookies['B']
     pattern = re.compile('.*"CrumbStore":\{"crumb":"(?P<crumb>[^"]+)"\}')
@@ -30,8 +31,9 @@ def downloadFileFromYahoo(startDate, endDate, instrumentId, fileName, event='his
     cookie, crumb = getCookieForYahoo(instrumentId)
     start = int(mktime(startDate.timetuple()))
     end = int(mktime(endDate.timetuple()))
+    headers = {'User-Agent': 'Mozilla/5.0'}
     url = 'https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=1d&events=%s&crumb=%s' % (instrumentId, start, end, event, crumb)
-    data = requests.get(url, cookies={'B': cookie})
+    data = requests.get(url, headers=headers, cookies={'B': cookie})
     with open(fileName, 'wb') as f:
         f.write(data.content)
         return True
