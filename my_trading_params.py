@@ -160,7 +160,7 @@ class MyTradingParams(TradingSystemParameters):
 
     def getPrediction(self, time, updateNum, instrumentManager):
 
-        predictions = pd.Series(index = self.instrumentIds)
+        predictions = pd.Series(index = self.instrumentIds, dtype='float64')
 
         # holder for all the instrument features
         lookbackInstrumentFeatures = instrumentManager.getLookbackInstrumentFeatures()
